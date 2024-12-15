@@ -1,6 +1,6 @@
 import pygame
 import os
-
+import random
 
 pygame.init()
 
@@ -15,7 +15,7 @@ pygame.mixer.music.play(-1, 0.0)  # -1 means loop indefinitely, 0.0 means start 
 
 pygame.time.wait(1050)
 
-WIDTH, HEIGHT = 1280, 720       # SCREEN RESOLUTION using 720p for simplicity's sake
+WIDTH, HEIGHT = 1920, 1080      # SCREEN RESOLUTION using 1080p for simplicity's sake
 screen = pygame.display.set_mode((WIDTH, HEIGHT))
 pygame.display.set_caption("FNAF Camera System Test")
 
@@ -30,6 +30,10 @@ image_paths = {
     pygame.K_1: "FNAF GAME/IMAGES/CAM1.png",
     pygame.K_2: "FNAF GAME/IMAGES/CAM2.png",
     pygame.K_3: "FNAF GAME/IMAGES/CAM3.png",
+    pygame.K_4: "FNAF GAME/IMAGES/CAM4.png",
+    pygame.K_5: "FNAF GAME/IMAGES/CAM5.png",
+    pygame.K_6: "FNAF GAME/IMAGES/CAM6.png",
+    pygame.K_7: "FNAF GAME/IMAGES/CAM7.png",
 }
 security_image_path = "FNAF GAME/IMAGES/SECURITY ROOM.png"
 
@@ -38,7 +42,6 @@ security_door_paths = {
     pygame.K_a: "FNAF GAME/IMAGES/SECURITY DOOR LEFT.png",
     pygame.K_d: "FNAF GAME/IMAGES/SECURITY DOOR RIGHT.png",
 }
-
 
 for key, path in image_paths.items(): # Load images from file paths and store them in the 'images' dictionary (THE KEY IS THE KEY PRESSED AND THE PATH IS THE VALUE WHICH IS WHERE THE IMAGE IS STORED)
     if os.path.exists(path):
@@ -73,11 +76,26 @@ previous_door_states = {
     "right": False,
 }
 
+# Animatronic 1 movement variables (RNG ONE)
+animatronic1_camera_sequence = [pygame.K_5, pygame.K_6, pygame.K_2]  # Cameras the animatronic moves through
+animatronic1_current_camera = 0  # Start at the first camera
+animatronic1_probability = 0.02  # Initial chance to move
+animatronic1_probability_increment = 0.02  # Increment per second
+
+animatronic1_image_path = "FNAF GAME/IMAGES/ANIMATRONIC1.png"
+if os.path.exists(animatronic1_image_path):
+    animatronic1_image = pygame.image.load(animatronic1_image_path)
+else:
+    print(f"file not found: {animatronic1_image_path}")
+    animatronic1_image = None
+
 # Main loop - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
 running = True
 clock = pygame.time.Clock()
+frame_counterANI1 = 0 #add more if more animatronics
 
 while running:
+    frame_counterANI1 += 1
     for event in pygame.event.get():
         if event.type == pygame.QUIT:   # Stop the game if the user closes the window
             running = False
@@ -117,12 +135,32 @@ while running:
         door_sound.play()  # Play right door sound
         previous_door_states["right"] = door_states["right"]  # Update previous state
 
+    # Animatronic movement logic
+    
+    if frame_counterANI1 >= 30:  # Check every 30 frames (about once per second at 30 FPS)
+        frame_counterANI1 = 0
+        if random.random() < animatronic1_probability:  # Animatronic decides to move
+            animatronic1_probability = 0.02  # Reset probability after movement
+            animatronic1_current_camera += 1
+            if animatronic1_current_camera >= len(animatronic1_camera_sequence):
+                print("Animatronic has left the cameras!")                              # Placeholder for jump scare logic
+                animatronic1_current_camera = len(animatronic1_camera_sequence) - 1
+        else:
+            animatronic1_probability += animatronic1_probability_increment
+
     screen.fill((0, 0, 0))  # Fill the screen with black to clear the previous frame
 
     if current_image:  # Draws the current image on the screen
         screen.blit(current_image, (0, 0))
     else:
         screen.blit(security_image, (0, 0))  # If no image, draw security room
+
+    # Don't draw animatronic when showing the security room
+    if current_image != security_image:
+        if animatronic1_current_camera < len(animatronic1_camera_sequence):
+            animatronic1_camera_key = animatronic1_camera_sequence[animatronic1_current_camera]
+            if current_camera == animatronic1_camera_key and animatronic1_image:
+                screen.blit(animatronic1_image, (WIDTH // 2 - animatronic1_image.get_width() // 2, HEIGHT // 2 - animatronic1_image.get_height() // 2))
 
     # Draw door images at the bottom corners
     if current_image == security_image:
