@@ -1,6 +1,7 @@
 import pygame
 import os
 import random
+import time
 
 pygame.init()
 pygame.font.init()
@@ -27,6 +28,8 @@ door_sound = pygame.mixer.Sound("FNAF GAME/door slam.mp3")
 camera_sound = pygame.mixer.Sound("FNAF GAME/camera open.mp3")
 camera_switch_sound = pygame.mixer.Sound("FNAF GAME/camera switch.mp3")
 jumpscare_sound = pygame.mixer.Sound("FNAF GAME/jumpscare sound.mp3")
+power_out_sound = pygame.mixer.Sound("FNAF GAME/power out.mp3")
+power_out_music = pygame.mixer.Sound("FNAF GAME/power out music.mp3")
 
 # load images
 images = {}
@@ -86,11 +89,11 @@ previous_door_states = {
     "right": False,
 }
 
-# Animatronic 1 movement variables (RNG ONE)
+                                                                                                                # Animatronic 1 movement variables (RNG ONE)(you can change chance here)
 animatronic1_camera_sequence = [pygame.K_5, pygame.K_6, pygame.K_2]  # Cameras the animatronic moves through
 animatronic1_current_camera = 0  # Start at the first camera
-animatronic1_probability = 0.02  # Initial chance to move
-animatronic1_probability_increment = 0.02  # Increment per second
+animatronic1_probability = 0.01  # Initial chance to move
+animatronic1_probability_increment = 0.01  # Increment per second
 
 animatronic1_image_path = "FNAF GAME/IMAGES/ANIMATRONIC1.png"
 if os.path.exists(animatronic1_image_path):
@@ -121,7 +124,9 @@ clock = pygame.time.Clock()
 frame_counterANI1 = 0 #add more if more animatronics based on frame count
 global_power = 101      
 idle_power = 0.00366666667     
-camera_power = 0.00366666667                                                  #WORK ON GLOBAL POWER HERE
+camera_power = 0.008                                            #WORK ON GLOBAL POWER HERE
+door_power = 0.01
+both_doors_power = 0.115
 
 
 while running:
@@ -130,6 +135,31 @@ while running:
     current_time1 = pygame.time.get_ticks()
     if global_power < 0:
         global_power = 0
+    if camera_open:
+        global_power -= camera_power
+    if door_states["left"]:
+        global_power -= door_power  # Consume power for left door being closed
+    if door_states["right"]:
+        global_power -= door_power  # Consume power for right door being closed
+    if door_states["left"] and door_states["right"]:
+        global_power -= both_doors_power  # Additional power for both doors being closed
+
+    if global_power <= 0:                       #POWER OUT 
+        pygame.mixer.music.stop()
+        camera_open = False
+        current_camera = security_image
+        door_states["left"] = False
+        door_states["right"] = False
+        """
+        power_out_sound.play()      #PLAY FOR 10 SECONDS
+        power_out_music.play()      #PLAY FOR 13 SECONDS
+        """
+        screen.fill((0, 0, 0))
+        screen.blit(jumpscare_image, (0, 0))
+        jumpscare_sound.play()
+        pygame.display.flip()
+        pygame.time.wait(3000)
+        running = False
 
     for event in pygame.event.get():
         if event.type == pygame.QUIT:   # Stop the game if the user closes the window
@@ -149,13 +179,10 @@ while running:
                     current_image = images[pygame.K_1]  #open the camera, display the first camera image always
                     current_camera = pygame.K_1
                     camera_open = True  #set camera state open
-                    global_power -= camera_power
             if current_image == security_image:
                 #toggle left door                                                           DOOOOOORRRSSS PLEASE FIX
                 if event.key == pygame.K_a:
                     door_states["left"] = not door_states["left"]
-
-                        
                 
                 #toggle right door
                 if event.key == pygame.K_d:
@@ -176,11 +203,8 @@ while running:
     if frame_counterANI1 >= 30:  # Check every 30 frames (about once per second at 30 FPS)
         frame_counterANI1 = 0
         if random.random() < animatronic1_probability:  # Animatronic decides to move
-            animatronic1_probability = 0.02  # Reset probability after movement
+            animatronic1_probability = 0.01  # Reset probability after movement
             animatronic1_current_camera += 1
-            if animatronic1_current_camera >= len(animatronic1_camera_sequence):
-                print("Animatronic has left the cameras!")                              # Placeholder for jump scare logic
-                animatronic1_current_camera = len(animatronic1_camera_sequence) - 1
         else:
             animatronic1_probability += animatronic1_probability_increment
 
