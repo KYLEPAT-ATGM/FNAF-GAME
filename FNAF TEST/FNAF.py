@@ -119,12 +119,14 @@ def render_outlined_text(surface, text, font, x, y, text_color, outline_color, o
 running = True
 clock = pygame.time.Clock()
 frame_counterANI1 = 0 #add more if more animatronics based on frame count
-global_power = 101                                                               #WORK ON GLOBAL POWER HERE
+global_power = 101      
+idle_power = 0.00366666667     
+camera_power = 0.00366666667                                                  #WORK ON GLOBAL POWER HERE
 
 
 while running:
     frame_counterANI1 += 1
-    global_power -= 0.00366666667
+    global_power -= idle_power
     current_time1 = pygame.time.get_ticks()
     if global_power < 0:
         global_power = 0
@@ -147,6 +149,7 @@ while running:
                     current_image = images[pygame.K_1]  #open the camera, display the first camera image always
                     current_camera = pygame.K_1
                     camera_open = True  #set camera state open
+                    global_power -= camera_power
             if current_image == security_image:
                 #toggle left door                                                           DOOOOOORRRSSS PLEASE FIX
                 if event.key == pygame.K_a:
@@ -229,6 +232,7 @@ while running:
             screen.blit(doors[pygame.K_a], (0, HEIGHT - doors[pygame.K_a].get_height()))  # Draw left door at bottom left
         if door_states["right"]:
             screen.blit(doors[pygame.K_d], (WIDTH - doors[pygame.K_d].get_width(), HEIGHT - doors[pygame.K_d].get_height()))  # Draw right door at bottom right
+    
     power_percent = int(global_power)
     power_text = f"POWER: {power_percent}%"
     render_outlined_text(
