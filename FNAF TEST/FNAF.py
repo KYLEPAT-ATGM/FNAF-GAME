@@ -56,6 +56,67 @@ image_paths = {
     pygame.K_6: "FNAF GAME/IMAGES/CAM6.png",
     pygame.K_7: "FNAF GAME/IMAGES/CAM7.png",
 }
+
+CAM1_ANI_image_path = "FNAF GAME/IMAGES/CAM1_ANI2.png"     #i think im stupid i didnt have to do this but i like it this way
+CAM2_ANI_image_path = "FNAF GAME/IMAGES/CAM2_ANI1.png"
+CAM3_ANI_image_path = "FNAF GAME/IMAGES/CAM3_ANI3.png"
+CAM4_ANI_image_path = "FNAF GAME/IMAGES/CAM4_ANI2.png"
+CAM5_ANI_image_path = "FNAF GAME/IMAGES/CAM5_ANI1.png"
+CAM6_ANI_image_path = "FNAF GAME/IMAGES/CAM6_ANI1.png"
+CAM7_ANI_image_path = "FNAF GAME/IMAGES/CAM7_ANI2.png"
+
+if os.path.exists(CAM1_ANI_image_path): 
+    CAM1_ANI_image = pygame.image.load(CAM1_ANI_image_path)
+else:
+    print(f"file not found: {CAM1_ANI_image_path}")
+    CAM1_ANI_image = None 
+
+if os.path.exists(CAM2_ANI_image_path):
+    CAM2_ANI_image = pygame.image.load(CAM2_ANI_image_path)
+else:
+    print(f"file not found: {CAM2_ANI_image_path}")
+    CAM2_ANI_image = None
+
+if os.path.exists(CAM3_ANI_image_path):
+    CAM3_ANI_image = pygame.image.load(CAM3_ANI_image_path)
+else:
+    print(f"file not found: {CAM3_ANI_image_path}")
+    CAM3_ANI_image = None
+
+if os.path.exists(CAM4_ANI_image_path):
+    CAM4_ANI_image = pygame.image.load(CAM4_ANI_image_path)
+else:
+    print(f"file not found: {CAM4_ANI_image_path}")
+    CAM4_ANI_image = None
+
+if os.path.exists(CAM5_ANI_image_path):
+    CAM5_ANI_image = pygame.image.load(CAM5_ANI_image_path)
+else:
+    print(f"file not found: {CAM5_ANI_image_path}")
+    CAM5_ANI_image = None
+
+if os.path.exists(CAM6_ANI_image_path):
+    CAM6_ANI_image = pygame.image.load(CAM6_ANI_image_path)
+else:
+    print(f"file not found: {CAM6_ANI_image_path}")
+    CAM6_ANI_image = None
+
+if os.path.exists(CAM7_ANI_image_path):
+    CAM7_ANI_image = pygame.image.load(CAM7_ANI_image_path)
+else:
+    print(f"file not found: {CAM7_ANI_image_path}")
+    CAM7_ANI_image = None
+
+animatronic_images = {
+    pygame.K_5: CAM5_ANI_image,
+    pygame.K_6: CAM6_ANI_image,
+    pygame.K_2: CAM2_ANI_image,
+    pygame.K_7: CAM7_ANI_image,
+    pygame.K_4: CAM4_ANI_image,
+    pygame.K_1: CAM1_ANI_image,
+    pygame.K_3: CAM3_ANI_image,
+}
+
 security_image_path = "FNAF GAME/IMAGES/SECURITY ROOM.png"
 jumpscare_image_path = "FNAF GAME/IMAGES/JUMPSCARE.png"
 
@@ -64,6 +125,9 @@ vent_image_paths = {
     pygame.K_s: "FNAF GAME/IMAGES/VENT0.png",
     pygame.K_f: "FNAF GAME/IMAGES/VENT1.png",
 }
+ani3_vent1_image_path = "FNAF GAME/IMAGES/ANIMATRONIC3_VENT1.png"
+ani3_vent2_image_path = "FNAF GAME/IMAGES/ANIMATRONIC3_VENT2.png"
+ani3_vent3_image_path = "FNAF GAME/IMAGES/ANIMATRONIC3_VENT3.png"
 
 doors = {}                                                          #WORK ON THE DOORS I HAVE NO CLUE
 security_door_paths = {
@@ -83,11 +147,29 @@ else:
     print(f"file not found: {security_image_path}")
     security_image = None # sets to no image if cant find
 
-if os.path.exists(jumpscare_image_path): #load security room then from the path (essentially locates it before it loads)
+if os.path.exists(jumpscare_image_path): 
     jumpscare_image = pygame.image.load(jumpscare_image_path)
 else:
     print(f"file not found: {jumpscare_image_path}")
     jumpscare_image = None # sets to no image if cant find
+
+if os.path.exists(ani3_vent1_image_path):
+    ani3_vent1_image = pygame.image.load(ani3_vent1_image_path)
+else:
+    print(f"file not found: {ani3_vent1_image_path}")
+    ani3_vent1_image = None # sets to no image if cant find
+
+if os.path.exists(ani3_vent2_image_path):
+    ani3_vent2_image = pygame.image.load(ani3_vent2_image_path)
+else:
+    print(f"file not found: {ani3_vent2_image_path}")
+    ani3_vent2_image = None # sets to no image if cant find
+
+if os.path.exists(ani3_vent3_image_path):
+    ani3_vent3_image = pygame.image.load(ani3_vent3_image_path)
+else:
+    print(f"file not found: {ani3_vent1_image_path}")
+    ani3_vent3_image = None # sets to no image if cant find
 
 for vent, path in vent_image_paths.items():
     if os.path.exists(path):
@@ -122,27 +204,22 @@ animatronic1_current_camera = 0  # Start at the first camera
 animatronic1_probability = 0.01  # Initial chance to move
 animatronic1_probability_increment = 0.01  # Increment per second
 
-animatronic1_image_path = "FNAF GAME/IMAGES/ANIMATRONIC1.png"
-if os.path.exists(animatronic1_image_path):
-    animatronic1_image = pygame.image.load(animatronic1_image_path)
-else:
-    print(f"file not found: {animatronic1_image_path}")
-    animatronic1_image = None
+
 
 animatronic1_at_door_time = 0  #track time if animatronic1 is at door
 animatronic1_reset_time = 0    #track time until animatronic disappear
 
 """ANIMATRONIC 2""" # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -                           # Animatronic 2 movement, (camera stare one) make him start at 2 am
-animatronic2_camera_sequence = [pygame.K_3, pygame.K_7, pygame.K_4, pygame.K_1]
+animatronic2_camera_sequence = [pygame.K_7, pygame.K_4, pygame.K_1]
 animatronic2_current_camera = 0
 look_at_time = 0
 time_not_looked = 0
-animatronic2_image_path = "FNAF GAME/IMAGES/ANIMATRONIC2.png"
-if os.path.exists(animatronic2_image_path):
-    animatronic2_image = pygame.image.load(animatronic2_image_path)
-else:
-    print(f"file not found: {animatronic2_image_path}")
-    animatronic2_image = None
+
+
+"""ANIMATRONIC 3""" # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -                           # Animatronic 3 movement, (starts at CAM 3 and moves to vent behind user) count times camera was opened
+animatronic3_camera_sequence = [pygame.K_3, ani3_vent1_image, ani3_vent2_image, ani3_vent3_image]
+animatronic3_current_camera = 0
+camera_open_count = 0
 
 
 def render_outlined_text(surface, text, font, x, y, text_color, outline_color, outline_thickness=2):        #I FOUND THIS ONLINE BUT IT WORKS SO IM NOT COMPLAINING
@@ -206,11 +283,15 @@ both_doors_power = 0.015
 door_bang_power = 0.01
 vent_flash_power = 0.002
 
-vent_flash = False
+vent_flashing = False
 vent_open = False
 current_vent_image = vents[pygame.K_s]
+ani3_not_looked = 0
+ani3_flash_time = 0
+
 
 run_sound_playing = False
+door_bang_sound_playing = False
 ani2_attacking = False
 animatronic2_at_door_time = 0
 ani2_has_attacked = False
@@ -253,7 +334,7 @@ while running:
         global_power -= door_power  # Consume power for right door being closed
     if door_states["left"] and door_states["right"]:
         global_power -= both_doors_power  # Additional power for both doors being closed
-    if vent_flash:
+    if vent_flashing:
         global_power -= vent_flash_power
 
     if global_power <= 0 and not power_out_started:
@@ -299,25 +380,23 @@ while running:
         if event.type == pygame.KEYDOWN:     # USE THIS FOR CAMERA NUMBER INPUTS FROM KEYBOARD
             if not power_out_started:
 
-                if event.key == pygame.K_s:
-                    vent_open = not vent_open
+                if event.key == pygame.K_s:  #toggle vent only when in security room
+                    if vent_open or current_image == security_image:  # Allow toggling vent mode only if in security room or vent mode is already open
+                        vent_open = not vent_open
                     if vent_open:
                         current_vent_image = vents[pygame.K_s]       
                         current_image = None
                                                                                                  #CHECK IF OWKRWRWRRW
                     else:
                         current_vent_image = None
-                        vent_flash = False
-                        current_image = security_image
-
-                if vent_open: #only allow flashlight in vent mode
-                    if event.key == pygame.K_f: #toggle flashed vent
-                        if current_vent_image == vents[pygame.K_s]:
-                            current_vent_image = vents[pygame.K_f]
-                            vent_flash = True
-                        elif current_vent_image == vents[pygame.K_f]:
-                            current_vent_image = vents[pygame.K_s]
-                            vent_flash = False
+                        vent_flashing = False
+                        if current_image == None:
+                            current_image = security_image
+                            
+                if event.key == pygame.K_f: #toggle flashed vent
+                    if vent_open: #only allow flashlight in vent mode
+                        vent_flashing = True
+                        
 
                 if not vent_open:   #disable cam and door in vent mode
                     if event.key in images and camera_open: #check if a key is same as camera num
@@ -325,6 +404,7 @@ while running:
                         current_camera = event.key  #update the current camera to the user inputted key
                         camera_switch_sound.play()
                     if event.key == pygame.K_SPACE:
+                        camera_open_count += 1
                         camera_sound.play()
                         if camera_open:  # If the camera is open
                             current_image = security_image  # Close the camera and display the security image
@@ -339,12 +419,16 @@ while running:
 
                     if current_image == security_image:
                         #toggle left door                                                           
-                        if event.key == pygame.K_a:
+                        if event.key == pygame.K_a and not camera_open:
                             door_states["left"] = not door_states["left"]
                     
                     #toggle right door
-                    if event.key == pygame.K_d:
+                    if event.key == pygame.K_d and not camera_open:
                         door_states["right"] = not door_states["right"]
+
+        if event.type == pygame.KEYUP:
+            if event.key == pygame.K_f:  # Stop flashing when F key is released
+                vent_flashing = False
 
         if event.type == pygame.MOUSEBUTTONDOWN:
             # Check if the mouse click is within the bounds of any camera's clickable area
@@ -398,9 +482,11 @@ while running:
             if animatronic1_at_door_time == 0:  # Start the timer if animatronic reaches the door
                 animatronic1_at_door_time = pygame.time.get_ticks()
             elif pygame.time.get_ticks() - animatronic1_at_door_time >= 8000:  # If the door is closed for 8 seconds
+                blink_screen(screen, 0)
                 animatronic1_current_camera = 0  # Reset animatronic to Camera 5
                 animatronic1_probability = 0.01  # Reset movement probability
                 animatronic1_at_door_time = 0  # Reset the door timer
+                
 
     else:
         animatronic1_at_door_time = 0  # Reset the timer if animatronic is not at Camera 2
@@ -423,7 +509,7 @@ while running:
             look_at_time = 0
             time_not_looked = 0
             animatronic2_current_camera += 1
-            if animatronic2_current_camera == 3:
+            if animatronic2_current_camera == 2:
                 animatronic2_current_camera += 1
 
         
@@ -437,35 +523,84 @@ while running:
             blink_screen(screen, 0)
             run_sound.play()
             run_sound_playing = True
-        animatronic2_current_camera = 3
-    
+        animatronic2_current_camera = 2
 
-        
-        if animatronic2_current_camera == 3:  # Check if animatronic is at Camera 1
-            door_open = not door_states["left"]  # Animatronic checks the left door state
+        door_open = not door_states["left"]
+
+        if door_open:
+            if animatronic2_at_door_time == 0:  
+                animatronic2_at_door_time = pygame.time.get_ticks()
+            elif pygame.time.get_ticks() - animatronic2_at_door_time >= 5000:  
+                screen.fill((0, 0, 0))
+                screen.blit(jumpscare_image, (0, 0))  
+                jumpscare_sound.play()  
+                pygame.display.flip()
+                pygame.time.wait(3000)
+                running = False  
+        else:
+            if animatronic2_at_door_time == 0:  
+                animatronic2_at_door_time = pygame.time.get_ticks()
             
-            if door_open:
-                if animatronic2_at_door_time == 0:  # Start the timer if animatronic reaches the door
-                    animatronic2_at_door_time = pygame.time.get_ticks()
-                elif pygame.time.get_ticks() - animatronic2_at_door_time >= 5000:  # If the door is open for 5 seconds
-                    screen.fill((0, 0, 0))
-                    screen.blit(jumpscare_image, (0, 0))  # Show the jumpscare image
-                    jumpscare_sound.play()  # Play jumpscare sound
-                    pygame.display.flip()
-                    pygame.time.wait(3000)
-                    running = False  # End the game
-            else:
-                if animatronic2_at_door_time == 0:  # Start the timer if animatronic reaches the door
-                    animatronic2_at_door_time = pygame.time.get_ticks()
-                elif pygame.time.get_ticks() - animatronic2_at_door_time >= 8000:  # If the door is closed for 8 seconds
+            current_time = pygame.time.get_ticks()
+            if current_time - animatronic2_at_door_time >= 8000:  
+                if not door_bang_sound_playing:
+                    door_bang_sound.play()
+                    door_bang_sound_playing = True
+                    global_power -= door_bang_power
                     blink_screen(screen, 0)
-                    animatronic2_current_camera = 0
-                    animatronic2_at_door_time = 0
-                    time_not_looked = 0
-                    print("ani 2 reset")
-    else:
-        run_sound_playing = False                                                           #PLEASE FIX DOOR BANGING SOUND WHEN HAVE TIME ALSO ADD ANIMATRONIC 3 TO VENT AND DECIDE WHAT TO DO WITH IT==============================+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++TO DO LIST++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+                    
                
+                time_not_looked = 0  # Reset time not looked only after the full 8 seconds
+                animatronic2_current_camera = 0
+                animatronic2_at_door_time = 0
+                run_sound_playing = False
+                door_bang_sound_playing = False
+                print("ani 2 reset")
+    else:
+        run_sound_playing = False             
+        door_bang_sound_playing = False 
+        animatronic2_at_door_time = 0             
+
+    #ANIMATRONIC 3 MOVEMENT
+    if animatronic3_current_camera == 0:
+        if camera_open_count >= 20:
+            animatronic3_current_camera = 1
+            camera_open_count = 0
+            ani3_not_looked = 0
+            ani3_last_move_time = pygame.time.get_ticks()
+
+    # Animatronic 3 movement logic
+    if animatronic3_current_camera in [1, 2, 3]:
+        if not vent_flashing:
+            if pygame.time.get_ticks() - ani3_last_move_time >= 5000:  # Move every 5 seconds
+                animatronic3_current_camera += 1
+                ani3_last_move_time = pygame.time.get_ticks()
+    else:
+        ani3_last_move_time = pygame.time.get_ticks()
+
+    if animatronic3_current_camera > 3:  # Jumpscare if animatronic3_current_camera is greater than index 3
+        screen.fill((0, 0, 0))
+        screen.blit(jumpscare_image, (0, 0))
+        jumpscare_sound.play()
+        pygame.display.flip()
+        pygame.time.wait(3000)
+        running = False
+        print("died by animatronic 3")
+
+    # Flashing logic for Animatronic 3
+    if vent_flashing:
+        if animatronic3_current_camera in [1, 2, 3]:             #ANIMATRONIC 3 IS BROKEN, FIX KILL RESET OR KILL, I DID NOT CHECK PLEASE MAKE SURE IT WORKS __+__++_++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+            ani3_flash_time += clock.get_time()
+            if ani3_flash_time >= 8000:  # Reset animatronic 3 if flashed for 8 seconds
+                blink_screen(screen, 0)
+                animatronic3_current_camera = 0
+                ani3_flash_time = 0
+                ani3_last_move_time = pygame.time.get_ticks()
+        else:
+            current_vent_image = vents[pygame.K_f]
+    else:
+        ani3_flash_time = 0  # Reset flash time if not flashing                                                                                 
+
     #RENDERING SECTION FOR IMAGE RENDERING IF RENDERING WITH IMAGES - - - - - - - -- - - - - -- - - - - -- - - - - - - -- - - - - - -- - - - - - -
 
     screen.fill((0, 0, 0))  # Fill the screen with black to clear the previous frame
@@ -478,19 +613,42 @@ while running:
     if vent_open and current_vent_image:
         screen.blit(current_vent_image, (0, 0))
 
-    # Don't draw animatronic when showing the security room             THIS IS WHERE ANIMATRONIC IS BEING DRAWN
+    # Don't draw animatronic when showing the security room
     if current_image != security_image and not vent_open:
         if animatronic1_current_camera < len(animatronic1_camera_sequence):
             animatronic1_camera_key = animatronic1_camera_sequence[animatronic1_current_camera]
-            if current_camera == animatronic1_camera_key and animatronic1_image:
-                screen.blit(animatronic1_image, (WIDTH // 2 - animatronic1_image.get_width() // 2, HEIGHT // 2 - animatronic1_image.get_height() // 2))
+            if current_camera == animatronic1_camera_key:
+                animatronic_image = animatronic_images.get(animatronic1_camera_key)
+                if animatronic_image:
+                    screen.blit(animatronic_image, (0, 0))  # Draw the animatronic image as the whole camera view
 
         if animatronic2_current_camera < len(animatronic2_camera_sequence):
             animatronic2_camera_key = animatronic2_camera_sequence[animatronic2_current_camera]
-            if current_camera == animatronic2_camera_key and animatronic2_image:
-                screen.blit(animatronic2_image, (WIDTH // 2 - animatronic2_image.get_width() // 2, HEIGHT // 2 - animatronic2_image.get_height() // 2))
+            if current_camera == animatronic2_camera_key:
+                animatronic_image = animatronic_images.get(animatronic2_camera_key)
+                if animatronic_image:
+                    screen.blit(animatronic_image, (0, 0))  # Draw the animatronic image as the whole camera view
 
-    
+        if animatronic3_current_camera < len(animatronic3_camera_sequence):
+            animatronic3_camera_key = animatronic3_camera_sequence[animatronic3_current_camera]
+            if current_camera == animatronic3_camera_key:
+                animatronic_image = animatronic_images.get(animatronic3_camera_key)
+                if animatronic_image:
+                    screen.blit(animatronic_image, (0, 0))  # Draw the animatronic image as the whole camera view
+
+    # Flashing logic for Animatronic 3 in vents
+    if vent_flashing:
+        if animatronic3_current_camera == 1 and ani3_vent1_image:
+            screen.blit(ani3_vent1_image, (0, 0))
+        elif animatronic3_current_camera == 2 and ani3_vent2_image:
+            screen.blit(ani3_vent2_image, (0, 0))
+        elif animatronic3_current_camera == 3 and ani3_vent3_image:
+            screen.blit(ani3_vent3_image, (0, 0))
+    else:
+    # If not flashing, show the default vent image
+        if vent_open:
+            current_vent_image = vents[pygame.K_s]  # Default to VENT0
+            screen.blit(current_vent_image, (0, 0))  # Show VENT0
 
     # Draw door images at the bottom corners
     if current_image == security_image:
@@ -511,7 +669,7 @@ while running:
         (0, 0, 0),  # Black outline
         2,  # Outline thickness
     )
-    print(time_remaining)#------------------------------------------------------------------------------------------------------------ENABLE THIS COMMENT TO SEE TIME REMAINING IN MILISECONDS---------
+    #print(time_remaining)#------------------------------------------------------------------------------------------------------------ENABLE THIS COMMENT TO SEE TIME REMAINING IN MILISECONDS---------
     # Format the clock and render it
     formatted_time = format_game_time(time_remaining)  # Get formatted time string using time_remaining
     render_outlined_text(
