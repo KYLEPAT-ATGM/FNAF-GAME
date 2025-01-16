@@ -2,6 +2,7 @@ import pygame
 import os
 import random
 from threading import Timer
+import sys
 
 def night_one():
     pygame.init()
@@ -41,6 +42,10 @@ def night_one():
     run_sound = pygame.mixer.Sound("FNAF GAME/run sound.mp3")
     vent_enter_sound = pygame.mixer.Sound("FNAF GAME/vent enter.mp3")
     six_am_sound = pygame.mixer.Sound("FNAF GAME/6AM.mp3")
+
+    #Camera delay
+    last_camera_switch = 0
+    camera_switch_delay = 5000
 
     #CAMERA BUTTON LOCATION #   https://pixspy.com/ USE THIS TO FIND PIXEL LOCATIONS
     camera_positions = {
@@ -232,6 +237,7 @@ def night_one():
         "left": False,
         "right": False,
     }
+
     #- - - - - - - - - - - - - - - - - - - - - - - ANIMATRONIC LOGIC - - - - - - - - - - - - - - - - - - - - -
     """ANIMATRONIC 1""" # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -                           # Animatronic 1 movement variables (RNG ONE)(you can change chance here)
     animatronic1_camera_sequence = [pygame.K_5, pygame.K_6, pygame.K_2]  # Cameras the animatronic moves through
@@ -390,7 +396,6 @@ def night_one():
             power_out_started = True
             power_out_start_time = pygame.time.get_ticks()
 
-
         if power_out_started:
             if power_out_start_time and pygame.time.get_ticks() - power_out_start_time >= 0:
                 if not playing_power_out_sound:
@@ -411,11 +416,27 @@ def night_one():
                 pygame.display.flip()
                 pygame.time.wait(3000)
                 running = False
-                print("died by one")
 
         for event in pygame.event.get():
-            if event.type == pygame.QUIT:   # Stop the game if the user closes the window
+            if event.type == pygame.QUIT:
                 running = False
+            elif event.type == pygame.KEYDOWN:
+                if event.key in camera_positions and camera_open:  # Only switch if cameras are open
+                    current_time = pygame.time.get_ticks()
+                    if current_time - last_camera_switch >= camera_switch_delay:
+                        # Switch camera
+                        last_camera_switch = current_time
+                        current_camera = event.key  # Track which camera we're on
+                        current_image = images[event.key]  # Update the current image
+                    # If there's an animatronic in this camera, show their image instead
+                        if event.key in animatronic_images and animatronic_images[event.key] is not None:
+                            if (event.key == animatronic1_camera_sequence[animatronic1_current_camera] or
+                                event.key == animatronic2_camera_sequence[animatronic2_current_camera] or
+                                event.key == animatronic3_camera_sequence[animatronic3_current_camera]):
+                                current_image = animatronic_images[event.key]
+                if event.key == pygame.K_ESCAPE:
+                    pygame.quit()
+                    sys.exit()
 
             if event.type == pygame.KEYDOWN:     # USE THIS FOR CAMERA NUMBER INPUTS FROM KEYBOARD
                 if not power_out_started:
@@ -437,7 +458,6 @@ def night_one():
                         if vent_open: #only allow flashlight in vent mode
                             vent_flashing = True
                             
-
                     if not vent_open:   #disable cam and door in vent mode
                         if event.key in images and camera_open: #check if a key is same as camera num
                             current_image = images[event.key]   #update the current camera to the user inputted key
@@ -801,6 +821,10 @@ def night_two():
     run_sound = pygame.mixer.Sound("FNAF GAME/run sound.mp3")
     vent_enter_sound = pygame.mixer.Sound("FNAF GAME/vent enter.mp3")
     six_am_sound = pygame.mixer.Sound("FNAF GAME/6AM.mp3")
+
+    #Camera delay
+    last_camera_switch = 0
+    camera_switch_delay = 5000
 
     #CAMERA BUTTON LOCATION #   https://pixspy.com/ USE THIS TO FIND PIXEL LOCATIONS
     camera_positions = {
@@ -1175,8 +1199,25 @@ def night_two():
                 print("died by one")
 
         for event in pygame.event.get():
-            if event.type == pygame.QUIT:   # Stop the game if the user closes the window
+            if event.type == pygame.QUIT:
                 running = False
+            elif event.type == pygame.KEYDOWN:
+                if event.key in camera_positions and camera_open:  # Only switch if cameras are open
+                    current_time = pygame.time.get_ticks()
+                    if current_time - last_camera_switch >= camera_switch_delay:
+                        # Switch camera
+                        last_camera_switch = current_time
+                        current_camera = event.key  # Track which camera we're on
+                        current_image = images[event.key]  # Update the current image
+                    # If there's an animatronic in this camera, show their image instead
+                        if event.key in animatronic_images and animatronic_images[event.key] is not None:
+                            if (event.key == animatronic1_camera_sequence[animatronic1_current_camera] or
+                                event.key == animatronic2_camera_sequence[animatronic2_current_camera] or
+                                event.key == animatronic3_camera_sequence[animatronic3_current_camera]):
+                                current_image = animatronic_images[event.key]
+                if event.key == pygame.K_ESCAPE:
+                    pygame.quit()
+                    sys.exit()
 
             if event.type == pygame.KEYDOWN:     # USE THIS FOR CAMERA NUMBER INPUTS FROM KEYBOARD
                 if not power_out_started:
@@ -1197,7 +1238,6 @@ def night_two():
                     if event.key == pygame.K_f: #toggle flashed vent
                         if vent_open: #only allow flashlight in vent mode
                             vent_flashing = True
-                            
 
                     if not vent_open:   #disable cam and door in vent mode
                         if event.key in images and camera_open: #check if a key is same as camera num
@@ -1248,8 +1288,6 @@ def night_two():
         if door_states["right"] != previous_door_states["right"]:
             door_sound.play()  # Play right door sound
             previous_door_states["right"] = door_states["right"]  # Update previous state
-
-        
 
         # Animatronic 1 movement logic 
         if frame_counterANI1 >= 30:  # Check every 30 frames (about once per second at 30 FPS)
@@ -1564,6 +1602,10 @@ def night_three():
     run_sound = pygame.mixer.Sound("FNAF GAME/run sound.mp3")
     vent_enter_sound = pygame.mixer.Sound("FNAF GAME/vent enter.mp3")
     six_am_sound = pygame.mixer.Sound("FNAF GAME/6AM.mp3")
+
+    #Camera delay
+    last_camera_switch = 0
+    camera_switch_delay = 5000
 
     #CAMERA BUTTON LOCATION #   https://pixspy.com/ USE THIS TO FIND PIXEL LOCATIONS
     camera_positions = {
@@ -1938,8 +1980,26 @@ def night_three():
                 print("died by one")
 
         for event in pygame.event.get():
-            if event.type == pygame.QUIT:   # Stop the game if the user closes the window
+            if event.type == pygame.QUIT:
                 running = False
+            elif event.type == pygame.KEYDOWN:
+                if event.key in camera_positions and camera_open:  # Only switch if cameras are open
+                    current_time = pygame.time.get_ticks()
+                    if current_time - last_camera_switch >= camera_switch_delay:
+                        # Switch camera
+                        last_camera_switch = current_time
+                        current_camera = event.key  # Track which camera we're on
+                        current_image = images[event.key]  # Update the current image
+                    # If there's an animatronic in this camera, show their image instead
+                        if event.key in animatronic_images and animatronic_images[event.key] is not None:
+                            if (event.key == animatronic1_camera_sequence[animatronic1_current_camera] or
+                                event.key == animatronic2_camera_sequence[animatronic2_current_camera] or
+                                event.key == animatronic3_camera_sequence[animatronic3_current_camera]):
+                                current_image = animatronic_images[event.key]
+                camera_switch_sound.play()  # If you have a camera switch sound
+                if event.key == pygame.K_ESCAPE:
+                    pygame.quit()
+                    sys.exit()
 
             if event.type == pygame.KEYDOWN:     # USE THIS FOR CAMERA NUMBER INPUTS FROM KEYBOARD
                 if not power_out_started:
@@ -1956,11 +2016,6 @@ def night_three():
                             vent_flashing = False
                             if current_image == None:
                                 current_image = security_image
-                                
-                    if event.key == pygame.K_f: #toggle flashed vent
-                        if vent_open: #only allow flashlight in vent mode
-                            vent_flashing = True
-                            
 
                     if not vent_open:   #disable cam and door in vent mode
                         if event.key in images and camera_open: #check if a key is same as camera num
@@ -1989,7 +2044,7 @@ def night_three():
                         #toggle right door
                         if event.key == pygame.K_d and not camera_open:
                             door_states["right"] = not door_states["right"]
-
+            
             if event.type == pygame.KEYUP:
                 if event.key == pygame.K_f:  # Stop flashing when F key is released
                     vent_flashing = False
@@ -2332,6 +2387,11 @@ def night_four():
     run_sound = pygame.mixer.Sound("FNAF GAME/run sound.mp3")
     vent_enter_sound = pygame.mixer.Sound("FNAF GAME/vent enter.mp3")
     six_am_sound = pygame.mixer.Sound("FNAF GAME/6AM.mp3")
+
+    #Camera delay
+    last_camera_switch = 0
+    camera_switch_delay = 5000
+    can_switch_camera = True
 
     #CAMERA BUTTON LOCATION #   https://pixspy.com/ USE THIS TO FIND PIXEL LOCATIONS
     camera_positions = {
@@ -2706,8 +2766,26 @@ def night_four():
                 print("died by one")
 
         for event in pygame.event.get():
-            if event.type == pygame.QUIT:   # Stop the game if the user closes the window
+            if event.type == pygame.QUIT:
                 running = False
+            elif event.type == pygame.KEYDOWN:
+                if event.key in camera_positions and camera_open and can_switch_camera:
+                    current_time = pygame.time.get_ticks()
+                if current_time - last_camera_switch >= camera_switch_delay:
+                    camera_switch_sound.play()  # If you have a sound effect
+                    last_camera_switch = current_time
+                    can_switch_camera = False  # Lock camera switching
+                    current_camera = event.key
+                    current_image = images[event.key]
+            # Animatronic check
+                    if event.key in animatronic_images and animatronic_images[event.key] is not None:
+                        if (event.key == animatronic1_camera_sequence[animatronic1_current_camera] or
+                            event.key == animatronic2_camera_sequence[animatronic2_current_camera] or
+                            event.key == animatronic3_camera_sequence[animatronic3_current_camera]):
+                            current_image = animatronic_images[event.key]
+                if event.key == pygame.K_ESCAPE:
+                    pygame.quit()
+                    sys.exit()
 
             if event.type == pygame.KEYDOWN:     # USE THIS FOR CAMERA NUMBER INPUTS FROM KEYBOARD
                 if not power_out_started:
@@ -2780,8 +2858,6 @@ def night_four():
             door_sound.play()  # Play right door sound
             previous_door_states["right"] = door_states["right"]  # Update previous state
 
-        
-
         # Animatronic 1 movement logic 
         if frame_counterANI1 >= 30:  # Check every 30 frames (about once per second at 30 FPS)
             frame_counterANI1 = 0
@@ -2848,7 +2924,6 @@ def night_four():
         if current_camera != animatronic2_current_camera:
             time_not_looked += clock.get_time()
         
-
     #animatronic 2 attack logic
         if time_not_looked >= 20000:  # Check if the animatronic can attack
             if not run_sound_playing:
@@ -2881,7 +2956,6 @@ def night_four():
                         global_power -= door_bang_power
                         blink_screen(screen, 0)
                         
-                
                     time_not_looked = 0  # Reset time not looked only after the full 8 seconds
                     animatronic2_current_camera = 0
                     animatronic2_at_door_time = 0
@@ -3054,6 +3128,10 @@ def night_four():
                 )
             if six_am_start_time and pygame.time.get_ticks() - six_am_start_time >= 10000:
                 running = False
+
+            current_time = pygame.time.get_ticks()
+            if not can_switch_camera and (current_time - last_camera_switch >= camera_switch_delay):
+                can_switch_camera = True
 
         pygame.display.flip()  #update display for new frame
 
@@ -3511,8 +3589,12 @@ def custom_night(global_power_settings, penny_settings, egg_settings, wolfington
                 print("died by one")
 
         for event in pygame.event.get():
-            if event.type == pygame.QUIT:   # Stop the game if the user closes the window
+            if event.type == pygame.QUIT:
                 running = False
+            elif event.type == pygame.KEYDOWN:
+                if event.key == pygame.K_ESCAPE:
+                    pygame.quit()
+                    sys.exit()
 
             if event.type == pygame.KEYDOWN:     # USE THIS FOR CAMERA NUMBER INPUTS FROM KEYBOARD
                 if not power_out_started:
@@ -3534,7 +3616,6 @@ def custom_night(global_power_settings, penny_settings, egg_settings, wolfington
                         if vent_open: #only allow flashlight in vent mode
                             vent_flashing = True
                             
-
                     if not vent_open:   #disable cam and door in vent mode
                         if event.key in images and camera_open: #check if a key is same as camera num
                             current_image = images[event.key]   #update the current camera to the user inputted key
@@ -3692,7 +3773,6 @@ def custom_night(global_power_settings, penny_settings, egg_settings, wolfington
                     animatronic2_at_door_time = 0
                     run_sound_playing = False
                     door_bang_sound_playing = False
-                    print("ani 2 reset")
         else:
             run_sound_playing = False             
             door_bang_sound_playing = False 
@@ -3726,7 +3806,6 @@ def custom_night(global_power_settings, penny_settings, egg_settings, wolfington
             pygame.display.flip()
             pygame.time.wait(3000)
             running = False
-            print("died by animatronic 3")
 
         # Flashing logic for Animatronic 3
         if vent_flashing:
@@ -3863,6 +3942,10 @@ def custom_night(global_power_settings, penny_settings, egg_settings, wolfington
         pygame.display.flip()  #update display for new frame
 
         clock.tick(30)  # 30 fps limiter
+
+    if running == False:
+        pygame.quit()
+        os.system("python menu.py")
 
     # Quit Pygame
     pygame.quit()
